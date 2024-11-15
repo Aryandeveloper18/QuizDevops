@@ -2,42 +2,46 @@ pipeline {
     agent any
 
     environment {
-        // Environment Variables
+        // Define environment variables
         DOCKER_IMAGE = 'quizappdevops-quiz-app'
         DOCKER_TAG = 'latest'
         POSTGRES_HOST = 'postgres_container'
         PGADMIN_HOST = 'pgadmin_container'
         SONARQUBE_HOST = 'quizappdevops-sonarqube'
-        SONARQUBE_TOKEN = credentials('sonarqube-token')  // Ensure SonarQube token is stored in Jenkins credentials
-        GIT_REPO_URL = 'https://github.com/your-repository-url.git'  // Replace with your GitHub repository URL
+        SONARQUBE_TOKEN = credentials('sonarqube-token')  // Ensure the token is saved in Jenkins credentials
+        GIT_REPO_URL = 'https://github.com/harshitksinghai/QuizAppDevops.git'
     }
 
     stages {
         stage('Checkout Code') {
             steps {
                 // Checkout the application code from GitHub
-                git url: "${GIT_REPO_URL}"
+                git url: "${GIT_REPO_URL}", branch: 'main'
             }
         }
 
         stage('Start Docker Containers') {
             steps {
                 script {
-                    // Start PostgreSQL, pgAdmin, and other required services using Docker Compose
-                    sh 'docker-compose up -d'
+                    // Start Docker containers
+                    sh 'docker-compose -f docker-compose.yaml up -d'
                 }
             }
         }
 
         stage('SonarQube Analysis') {
+            environment {
+                SONARQUBE_SERVER = 'sonarqube-server1'  // Name of the SonarQube server configured in Jenkins
+                SONARQUBE_TOKEN = credentials('quizapp-devops-token')  // SonarQube token stored in Jenkins credentials
+            }
             steps {
                 script {
-                    // Run SonarQube analysis (Ensure the SonarQube instance is running and accessible)
+                    // Run the SonarQube analysis
                     sh """
-                    mvn sonar:sonar \
-                        -Dsonar.projectKey=your_project_key \
-                        -Dsonar.host.url=http://${SONARQUBE_HOST}:9000 \
-                        -Dsonar.login=${SONARQUBE_TOKEN}
+                        mvn clean verify sonar:sonar \
+                            -Dsonar.projectKey=quizapp-devops \
+                            -Dsonar.host.url=http://${SONARQUBE_SERVER}:9000 \
+                            -Dsonar.login=${SONARQUBE_TOKEN}
                     """
                 }
             }
@@ -47,16 +51,24 @@ pipeline {
             steps {
                 script {
                     // Optionally, restart the app container to deploy the latest version
-                    sh 'docker-compose restart quizappdevops-quiz-app'
+                    sh 'docker-compose -f docker-compose.yaml restart quizappdevops-quiz-app'
                 }
             }
         }
     }
 
     post {
+        success {
+            // Notify on successful build
+            echo 'Build and deployment successful.'
+        }
+        failure {
+            // Notify on failure
+            echo 'Build failed.'
+        }
         always {
-            // Clean up the Docker containers and volumes to avoid resource leakage
-            sh 'docker-compose down --volumes --remove-orphans'
+            // Clean up Docker containers
+            sh 'docker-compose -f docker-compose.yaml down --volumes --remove-orphans'
         }
     }
 }
