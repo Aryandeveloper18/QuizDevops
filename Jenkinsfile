@@ -1,10 +1,10 @@
 pipeline{
     agent any
     environment{
-        PATH = "/opt/maven/bin:$PATH"
-        JAVA_HOME = "/usr/lib/jvm/java-1.11.0-openjdk-amd64"
+        PATH = "/usr/share/maven/bin:$PATH"
+        JAVA_HOME = "/usr/lib/jvm/java-17-openjdk-amd64"
     stages{
-        stage( 'Build' ){
+        stage('Build'){
             steps{
                 sh "mvn clean install"
             }
