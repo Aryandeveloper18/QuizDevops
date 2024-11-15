@@ -8,7 +8,7 @@ pipeline {
         POSTGRES_HOST = 'postgres_container'
         PGADMIN_HOST = 'pgadmin_container'
         SONARQUBE_HOST = 'quizappdevops-sonarqube'
-        SONARQUBE_TOKEN = credentials('sonarqube-token')  // Ensure the token is saved in Jenkins credentials
+        SONARQUBE_TOKEN = credentials('quizapp-devops-token')  // Ensure the token is saved in Jenkins credentials
         GIT_REPO_URL = 'https://github.com/harshitksinghai/QuizAppDevops.git'
     }
 
@@ -32,7 +32,6 @@ pipeline {
         stage('SonarQube Analysis') {
             environment {
                 SONARQUBE_SERVER = 'sonarqube-server1'  // Name of the SonarQube server configured in Jenkins
-                SONARQUBE_TOKEN = credentials('quizapp-devops-token')  // SonarQube token stored in Jenkins credentials
             }
             steps {
                 script {
