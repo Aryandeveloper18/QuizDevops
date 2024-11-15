@@ -1,6 +1,5 @@
 pipeline {
     agent any
-
     environment {
         // Define environment variables
         DOCKER_IMAGE = 'quizappdevops-quiz-app'
