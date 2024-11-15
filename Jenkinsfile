@@ -1,8 +1,8 @@
 pipeline{
     agent any
     environment{
-        PATH = "/usr/share/maven/bin:$PATH"
-        JAVA_HOME = "/usr/lib/jvm/java-17-openjdk-amd64"
+        PATH = "/opt/maven/bin:$PATH"
+        JAVA_HOME = "/opt/java/openjdk"
     }
     stages{
         stage('Build'){
