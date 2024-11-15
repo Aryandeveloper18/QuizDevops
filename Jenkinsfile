@@ -1,8 +1,8 @@
 pipeline{
     agent any
     environment{
-        PATH = "/opt/maven/bin:$PATH"
-        JAVA_HOME = "/opt/java/openjdk"
+        PATH = "/opt/homebrew/bin/mvn"
+        JAVA_HOME = "/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home"
     }
     stages{
         stage('Build'){
@@ -12,7 +12,7 @@ pipeline{
         }
         stage('SonarQube analysis'){
             steps{
-                withSonarQubeEnv('sonarqube_server'){
+                withSonarQubeEnv('sonarqube'){
                     sh "mvn sonar: sonar"
                 }
             }
