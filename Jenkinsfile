@@ -7,13 +7,13 @@ pipeline{
     stages{
         stage('Build'){
             steps{
-                sh "mvn clean install"
+                sh '/bin/bash -c "mvn clean install"'
             }
         }
         stage('SonarQube analysis'){
             steps{
                 withSonarQubeEnv('sonarqube'){
-                    sh "mvn sonar: sonar"
+                    sh '/bin/bash -c "mvn sonar: sonar"'
                 }
             }
         }
