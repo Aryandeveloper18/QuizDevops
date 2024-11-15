@@ -5,6 +5,15 @@ pipeline {
         JAVA_HOME = "/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home"
     }
     stages {
+        stage('Debug') {
+            steps {
+                sh 'echo $PATH'
+                sh 'which sh'
+                sh 'which bash'
+                sh 'which zsh'
+            }
+        }
+
         stage('Build') {
             steps {
                 sh '/bin/zsh -c "mvn clean install"'
