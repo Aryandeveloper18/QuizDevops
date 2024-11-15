@@ -1,0 +1,90 @@
+services:
+  # Reuse existing PostgreSQL container
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres2024
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - quizapp_network
+    restart: unless-stopped
+    # Ensure this is not recreated by keeping the same container_name
+
+  # Reuse existing pgAdmin container
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: harshitksinghai24@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: postgres2024
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - quizapp_network
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    # No new instance will be created as it uses the same container_name
+
+  # Quiz application
+  quiz-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: quizappdevops-quiz-app
+    container_name: quizappdevops-quiz-app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_container:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres2024
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - quizapp_network
+
+  # Jenkins service
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: quizappdevops-jenkins
+    ports:
+      - "8081:8080"
+      - "50000:50000"
+    networks:
+      - quizapp_network
+    volumes:
+      - jenkins_home:/var/jenkins_home
+
+  # SonarQube service
+  sonarqube:
+    image: sonarqube:latest
+    container_name: quizappdevops-sonarqube
+    ports:
+      - "9000:9000"
+    networks:
+      - quizapp_network
+    environment:
+      - sonar.jdbc.url=jdbc:postgresql://postgres_container:5432/postgres
+      - sonar.jdbc.username=postgres
+      - sonar.jdbc.password=postgres2024
+    depends_on:
+      - postgres
+
+networks:
+  quizapp_network:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:
+  jenkins_home:

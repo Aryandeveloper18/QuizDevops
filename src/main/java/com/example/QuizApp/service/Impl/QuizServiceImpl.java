@@ -70,4 +70,9 @@ public class QuizServiceImpl implements QuizService {
         quizResponseDTO.setRightAnsCount(rightAnsCount);
         return quizResponseDTO;
     }
+
+
+    public void hello(){
+        System.out.println("heelo");
+    }
 }
