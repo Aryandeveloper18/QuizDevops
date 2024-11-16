@@ -1,5 +1,4 @@
 services:
-  # Reuse existing PostgreSQL container
   postgres:
     container_name: postgres_container
     image: postgres
@@ -14,9 +13,7 @@ services:
     networks:
       - quizapp_network
     restart: unless-stopped
-    # Ensure this is not recreated by keeping the same container_name
 
-  # Reuse existing pgAdmin container
   pgadmin:
     container_name: pgadmin_container
     image: dpage/pgadmin4
@@ -33,9 +30,7 @@ services:
     restart: unless-stopped
     depends_on:
       - postgres
-    # No new instance will be created as it uses the same container_name
 
-  # Quiz application
   quiz-app:
     build:
       context: .
@@ -53,20 +48,6 @@ services:
     networks:
       - quizapp_network
 
-  # Jenkins service
-#  jenkins:
-#    image: jenkins/jenkins:lts
-#    container_name: quizappdevops-jenkins
-#    ports:
-#      - "8081:8080"
-#      - "50000:50000"
-#    networks:
-#      - quizapp_network
-#    volumes:
-#      - jenkins_home:/var/jenkins_home
-#      - /var/run/docker.sock:/var/run/docker.sock
-
-  # SonarQube service
   sonarqube:
     image: sonarqube:latest
     container_name: quizappdevops-sonarqube
@@ -88,4 +69,3 @@ networks:
 volumes:
   postgres:
   pgadmin:
-  jenkins_home:

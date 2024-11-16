@@ -8,3 +8,4 @@ COPY target/QuizApp-0.0.1-SNAPSHOT.jar QuizApp.jar
 ENTRYPOINT ["java", "-jar", "QuizApp.jar"]
 
 EXPOSE 8080
+
