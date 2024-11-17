@@ -18,6 +18,6 @@ public class Quiz {
 
     private String title;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST) // Added cascade
     private List<Question> questions;
 }
