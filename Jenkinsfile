@@ -5,7 +5,7 @@ pipeline {
     }
     environment {
         PATH = "/opt/homebrew/bin:/opt/homebrew/opt/postgresql@14/bin:/bin:/usr/bin"
-        JAVA_HOME = "/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home"
+        JAVA_HOME = "/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home"
     }
     stages {
 
