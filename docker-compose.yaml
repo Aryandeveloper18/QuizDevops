@@ -45,20 +45,6 @@ services:
     networks:
       - quizapp_network
 
-  sonarqube:
-    image: sonarqube:latest
-    container_name: quizappdevops-sonarqube
-    ports:
-      - "9000:9000"
-    networks:
-      - quizapp_network
-    environment:
-      - sonar.jdbc.url=jdbc:postgresql://postgresql:5432/quizdb
-      - sonar.jdbc.username=postgres
-      - sonar.jdbc.password=postgres2024
-    depends_on:
-      - postgresql
-
 networks:
   quizapp_network:
     driver: bridge
